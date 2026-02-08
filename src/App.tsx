@@ -1,19 +1,13 @@
 import { Container, Heading, List, Stack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Record } from "./domain/record";
-import { getAllRecords } from "./lib/record";
+import { useEffect } from "react";
+import { useAllRecords } from "./hooks/useAllRecords";
 
 function App() {
-  const [records, setRecords] = useState<Record[]>([]);
+  const { records, getRecords } = useAllRecords();
 
   useEffect(() => {
-    const getAllTodos = async () => {
-      const recordsData = await getAllRecords();
-      setRecords(recordsData);
-    };
-
-    getAllTodos();
-  });
+    getRecords();
+  }, [getRecords]);
 
   const recordTexts = records.map((record) => ({
     record_id: record.id,
