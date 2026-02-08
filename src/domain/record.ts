@@ -1,7 +1,9 @@
+import type { StudyRecordRow } from "@/types/record";
+
 export class Record {
-  public id: string;
-  public title: string;
-  public time: number;
+  public readonly id: string;
+  public readonly title: string;
+  public readonly time: number;
 
   constructor(id: string, title: string, time: number) {
     this.id = id;
@@ -9,8 +11,8 @@ export class Record {
     this.time = time;
   }
 
-  public static fromObject(init?: Partial<Record>): Record {
-    return new Record(init?.id || "", init?.title || "", init?.time || 0);
+  public static fromRow(row: StudyRecordRow): Record {
+    return new Record(row.id, row.title, row.time);
   }
 
   public toListItemText(): string {
