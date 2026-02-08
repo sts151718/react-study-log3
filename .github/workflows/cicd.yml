@@ -1,7 +1,12 @@
-name: Node.js Package
+name: CI/CD Pipeline
+
+run-name: ${{github.workflow}} - ${{github.event.head_commit.message || github.event.pull_request.title}}
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   NODE_VERSION: 24
@@ -34,7 +39,7 @@ jobs:
       - name: build package
         run: npm run build
       - name: upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: dist-artifact
           path: dist
@@ -51,13 +56,13 @@ jobs:
       - name: install firebase tools
         run: npm install --save-dev firebase-tools
       - name: download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v6
         with:
           name: dist-artifact
           path: dist
       - name: set firebase key
         run: |
-          echo ${{ secrets.FIREBASE_KEY }} | base64 -d > ${{ github.workspace }}/firebase-key.json
+          echo "${{ secrets.FIREBASE_KEY }}" | base64 -d > ${{ github.workspace }}/firebase-key.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/firebase-key.json" >> $GITHUB_ENV
       - name: select firebase project
         run: ./node_modules/.bin/firebase use ${{ secrets.FIREBASE_PROJECT_ID }}
