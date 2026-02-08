@@ -1,9 +1,10 @@
-import { Container, Heading, List, Stack } from "@chakra-ui/react";
+import { Container, Heading, List, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useAllRecords } from "./hooks/useAllRecords";
+import { StudyRecords } from "./components/organisms/StudyRecords";
 
 function App() {
-  const { records, getRecords } = useAllRecords();
+  const { records, isLoading, getRecords } = useAllRecords();
 
   useEffect(() => {
     getRecords();
@@ -20,6 +21,7 @@ function App() {
         学習記録一覧
       </Heading>
       <Stack spaceY={4} p="2" borderRadius="md">
+        {isLoading && <Spinner mx="auto" mt={2} />}
         <List.Root unstyled spaceY={2}>
           {recordTexts.map((recordText) => (
             <List.Item
