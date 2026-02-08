@@ -4,6 +4,9 @@ run-name: ${{github.workflow}} - ${{github.event.head_commit.message || github.e
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   NODE_VERSION: 24
