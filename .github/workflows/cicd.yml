@@ -59,7 +59,7 @@ jobs:
           path: dist
       - name: set firebase key
         run: |
-          echo ${{ secrets.FIREBASE_KEY }} | base64 -d > ${{ github.workspace }}/firebase-key.json
+          echo "${{ secrets.FIREBASE_KEY }}" | base64 -d > ${{ github.workspace }}/firebase-key.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/firebase-key.json" >> $GITHUB_ENV
       - name: select firebase project
         run: ./node_modules/.bin/firebase use ${{ secrets.FIREBASE_PROJECT_ID }}
