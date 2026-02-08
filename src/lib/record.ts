@@ -8,9 +8,7 @@ export const getAllRecords = async (): Promise<Array<Record>> => {
     throw new Error(response.error.message);
   }
 
-  const recordsData = response.data.map(
-    (record) => new Record(record.id, record.title, record.time),
-  );
+  const recordsData = response.data.map((record) => Record.fromObject(record));
 
   return recordsData;
 };
