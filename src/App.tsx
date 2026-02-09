@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     getRecords();
-  }, [getRecords]);
+  }, []);
 
   const onStudyDialogSubmit = async (form: StudyForm) => {
     const newRecord = await addRecord(form);
