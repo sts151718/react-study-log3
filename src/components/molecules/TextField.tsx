@@ -1,20 +1,39 @@
 import { Field, Input } from "@chakra-ui/react";
-import { memo, type FC } from "react";
+import { memo, type FC, type Ref } from "react";
+import type { UseFormRegister } from "react-hook-form";
 
 type Props = {
   label: string;
   placeholder: string;
-  value: string;
+  name: string;
+  inputRef: Ref<HTMLInputElement>;
+  errorMessage?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 export const TextField: FC<Props> = memo((props) => {
-  const { label, placeholder, value, onChange } = props;
+  const {
+    label,
+    placeholder,
+    name,
+    inputRef,
+    errorMessage = "",
+    onChange,
+    onBlur,
+  } = props;
 
   return (
-    <Field.Root>
+    <Field.Root invalid={!!errorMessage}>
       <Field.Label>{label}</Field.Label>
-      <Input placeholder={placeholder} value={value} onChange={onChange} />
+      <Input
+        placeholder={placeholder}
+        name={name}
+        ref={inputRef}
+        onChange={onChange}
+        onBlur={onBlur}
+      />
+      <Field.ErrorText>{errorMessage}</Field.ErrorText>
     </Field.Root>
   );
 });

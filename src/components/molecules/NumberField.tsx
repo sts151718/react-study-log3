@@ -1,5 +1,5 @@
 import { Field, NumberInput } from "@chakra-ui/react";
-import { memo, type FC } from "react";
+import { memo, type FC, type Ref } from "react";
 
 type Props = {
   label: string;
@@ -7,8 +7,12 @@ type Props = {
   min?: number;
   max?: number;
   w?: string;
-  value: string;
+  defaultValue?: number;
+  name: string;
+  inputRef: Ref<HTMLInputElement>;
+  errorMessage?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 export const NumberField: FC<Props> = memo((props) => {
@@ -18,24 +22,32 @@ export const NumberField: FC<Props> = memo((props) => {
     min = 0,
     max = Infinity,
     w = "full",
-    value,
+    defaultValue = 0,
+    name,
+    inputRef,
+    errorMessage = "",
     onChange,
+    onBlur,
   } = props;
 
   return (
-    <Field.Root>
+    <Field.Root invalid={!!errorMessage}>
       <Field.Label>{label}</Field.Label>
       <NumberInput.Root w={w} min={min} max={max}>
         <NumberInput.Input
+          defaultValue={defaultValue}
           placeholder={placeholder}
-          value={value}
+          name={name}
+          ref={inputRef}
           onChange={onChange}
+          onBlur={onBlur}
         />
         <NumberInput.Control>
           <NumberInput.IncrementTrigger />
           <NumberInput.DecrementTrigger />
         </NumberInput.Control>
       </NumberInput.Root>
+      <Field.ErrorText>{errorMessage}</Field.ErrorText>
     </Field.Root>
   );
 });

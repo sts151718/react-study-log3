@@ -1,4 +1,11 @@
-import { CloseButton, Dialog, Flex, Stack } from "@chakra-ui/react";
+import {
+  CloseButton,
+  Dialog,
+  Fieldset,
+  Flex,
+  Stack,
+  type DialogOpenChangeDetails,
+} from "@chakra-ui/react";
 import { memo, useState, type ChangeEvent, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
@@ -6,6 +13,7 @@ import { TextField } from "../molecules/TextField";
 import { NumberField } from "../molecules/NumberField";
 import { ButtonsWrap } from "../atoms/ButtonsWrap";
 import type { StudyForm } from "@/types/StudyForm";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
 type Props = {
   onSubmit: (form: StudyForm) => void;
@@ -16,65 +24,84 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [title, setTitle] = useState("");
-  const [time, setTime] = useState("0");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<StudyForm>();
 
-  const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-  const onChangeTime = (e: ChangeEvent<HTMLInputElement>) => {
-    setTime(e.target.value);
-  };
+  const title = register("title", {
+    required: {
+      value: true,
+      message: "内容の入力は必須です",
+    },
+  });
+  const time = register("time", {
+    required: { value: true, message: "時間の入力は必須です" },
+    min: { value: 0, message: "時間は0以上である必要があります" },
+  });
 
-  const onStudySubmit = () => {
-    onSubmit({ title, time });
+  const onStudySubmit: SubmitHandler<StudyForm> = (data) => {
+    onSubmit(data);
     setIsOpen(false);
   };
 
+  const dialogOpenChange = (e: DialogOpenChangeDetails) => setIsOpen(e.open);
+
   return (
-    <Dialog.Root open={isOpen}>
-      <Dialog.Trigger asChild>
-        <Flex justifyContent="center" align="center" mb={2}>
-          <PrimaryButton onClick={() => setIsOpen(true)}>登録</PrimaryButton>
-        </Flex>
-      </Dialog.Trigger>
-      <Dialog.Backdrop />
-      <Dialog.Positioner>
-        <Dialog.Content>
-          <Dialog.CloseTrigger asChild>
-            <CloseButton />
-          </Dialog.CloseTrigger>
-          <Dialog.Header justifyContent="center">
-            <Dialog.Title>新規登録</Dialog.Title>
-          </Dialog.Header>
-          <Dialog.Body>
-            <Stack spaceY="4">
-              <TextField
-                label="学習内容"
-                placeholder="学習内容を入力してください"
-                value={title}
-                onChange={onChangeTitle}
-              />
-              <NumberField
-                w="full"
-                label="学習時間"
-                placeholder="時間で入力してください"
-                min={0}
-                value={time}
-                onChange={onChangeTime}
-              />
-            </Stack>
-          </Dialog.Body>
-          <Dialog.Footer justifyContent="center">
-            <ButtonsWrap justifyContent="center" gap="2">
-              <PrimaryButton onClick={onStudySubmit}>登録</PrimaryButton>
-              <SecondaryButton onClick={() => setIsOpen(!isOpen)}>
-                キャンセル
-              </SecondaryButton>
-            </ButtonsWrap>
-          </Dialog.Footer>
-        </Dialog.Content>
-      </Dialog.Positioner>
-    </Dialog.Root>
+    <form onSubmit={handleSubmit(onStudySubmit)}>
+      <Fieldset.Root>
+        <Dialog.Root open={isOpen} onOpenChange={dialogOpenChange}>
+          <Dialog.Trigger asChild>
+            <Flex justifyContent="center" align="center" mb={2}>
+              <PrimaryButton>登録</PrimaryButton>
+            </Flex>
+          </Dialog.Trigger>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton />
+              </Dialog.CloseTrigger>
+              <Dialog.Header justifyContent="center">
+                <Dialog.Title>新規登録</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Stack spaceY="4">
+                  <TextField
+                    label="学習内容"
+                    placeholder="学習内容を入力してください"
+                    name={title.name}
+                    onChange={title.onChange}
+                    onBlur={title.onBlur}
+                    inputRef={title.ref}
+                    errorMessage={errors.title?.message}
+                  />
+                  <NumberField
+                    w="full"
+                    label="学習時間"
+                    placeholder="時間で入力してください"
+                    min={0}
+                    name={time.name}
+                    onChange={time.onChange}
+                    onBlur={time.onBlur}
+                    inputRef={time.ref}
+                    errorMessage={errors.time?.message}
+                  />
+                </Stack>
+              </Dialog.Body>
+              <Dialog.Footer justifyContent="center">
+                <ButtonsWrap justifyContent="center" gap="2">
+                  <PrimaryButton type="submit">登録</PrimaryButton>
+                  <Dialog.ActionTrigger asChild>
+                    <SecondaryButton>キャンセル</SecondaryButton>
+                  </Dialog.ActionTrigger>
+                </ButtonsWrap>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      </Fieldset.Root>
+    </form>
   );
 });
