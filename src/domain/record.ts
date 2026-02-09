@@ -1,4 +1,4 @@
-import type { StudyRecordRow } from "@/types/record";
+import type { StudyRecordRow } from "@/types/StudyRecord";
 
 export class Record {
   public readonly id: string;

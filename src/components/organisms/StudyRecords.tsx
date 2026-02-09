@@ -18,7 +18,7 @@ export const StudyRecords: FC<Props> = memo((props) => {
   return (
     <Stack spaceY={4} p="2" borderRadius="md">
       {isLoading && <Spinner mx="auto" mt={2} />}
-      <List.Root unstyled spaceY={2}>
+      <List.Root unstyled spaceY={2} textAlign="left">
         {recordTexts.map((recordText) => (
           <List.Item
             key={recordText.record_id}
