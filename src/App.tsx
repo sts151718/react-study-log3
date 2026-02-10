@@ -1,14 +1,4 @@
-import {
-  CloseButton,
-  Container,
-  Dialog,
-  Field,
-  Flex,
-  Heading,
-  Input,
-  NumberInput,
-  Stack,
-} from "@chakra-ui/react";
+import { Container, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useAllRecords } from "./hooks/useAllRecords";
 import { StudyRecords } from "./components/organisms/StudyRecords";
@@ -23,7 +13,7 @@ function App() {
   }, []);
 
   const onStudyDialogSubmit = async (form: StudyForm) => {
-    const newRecord = await addRecord(form);
+    await addRecord(form);
   };
 
   return (

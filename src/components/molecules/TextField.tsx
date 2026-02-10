@@ -1,6 +1,5 @@
 import { Field, Input } from "@chakra-ui/react";
 import { memo, type FC, type Ref } from "react";
-import type { UseFormRegister } from "react-hook-form";
 
 type Props = {
   label: string;

@@ -6,7 +6,7 @@ import {
   Stack,
   type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
-import { memo, useState, type ChangeEvent, type FC } from "react";
+import { memo, useState, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
