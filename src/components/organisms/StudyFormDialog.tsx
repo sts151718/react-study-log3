@@ -28,7 +28,13 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StudyForm>();
+    reset,
+  } = useForm<StudyForm>({
+    defaultValues: {
+      title: "",
+      time: "0",
+    },
+  });
 
   const title = register("title", {
     required: {
@@ -44,6 +50,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
   const onStudySubmit: SubmitHandler<StudyForm> = (data) => {
     onSubmit(data);
     setIsOpen(false);
+    reset();
   };
 
   const dialogOpenChange = (e: DialogOpenChangeDetails) => setIsOpen(e.open);

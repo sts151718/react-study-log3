@@ -30,3 +30,11 @@ export const insertRecord = async (
   const insertedRow: StudyRecordRow = response.data[0];
   return Record.fromRow(insertedRow);
 };
+
+export const deleteRecordById = async (id: string): Promise<void> => {
+  const response = await supabase.from("study-record").delete().eq("id", id);
+
+  if (response.error) {
+    throw new Error(response.error.message);
+  }
+};

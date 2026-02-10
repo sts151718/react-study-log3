@@ -1,5 +1,5 @@
 import type { Record } from "@/domain/record";
-import { getAllRecords, insertRecord } from "@/lib/record";
+import { deleteRecordById, getAllRecords, insertRecord } from "@/lib/record";
 import type { StudyForm } from "@/types/StudyForm";
 import { useCallback, useState } from "react";
 
@@ -28,5 +28,21 @@ export const useAllRecords = () => {
     [records],
   );
 
-  return { records, isLoading, getRecords, addRecord };
+  const deleteRecord = useCallback(
+    async (id: string) => {
+      await deleteRecordById(id);
+
+      const newRecords = records.filter((record) => record.id !== id);
+      setRecords(newRecords);
+    },
+    [records],
+  );
+
+  return {
+    records,
+    isLoading,
+    getRecords,
+    addRecord,
+    deleteRecord,
+  };
 };

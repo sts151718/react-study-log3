@@ -1,14 +1,17 @@
 import type { Record } from "@/domain/record";
-import { List, Spinner, Stack } from "@chakra-ui/react";
+import { Flex, List, Spinner, Stack, Text } from "@chakra-ui/react";
 import { memo, type FC } from "react";
+import { ButtonsWrap } from "../atoms/ButtonsWrap";
+import { AlertButton } from "../atoms/AlertButton";
 
 type Props = {
   isLoading: boolean;
   records: Array<Record>;
+  onDeleteRecord: (id: string) => void;
 };
 
 export const StudyRecords: FC<Props> = memo((props) => {
-  const { isLoading, records } = props;
+  const { isLoading, records, onDeleteRecord } = props;
 
   const recordTexts = records.map((record) => ({
     record_id: record.id,
@@ -25,7 +28,17 @@ export const StudyRecords: FC<Props> = memo((props) => {
             borderColor="gray.300"
             p={4}
           >
-            {recordText.text}
+            <Flex justifyContent="space-between" alignItems="center">
+              <Text>{recordText.text}</Text>
+              <ButtonsWrap gap="2">
+                <AlertButton
+                  buttonProps={{ size: "xs" }}
+                  onClick={() => onDeleteRecord(recordText.record_id)}
+                >
+                  削除
+                </AlertButton>
+              </ButtonsWrap>
+            </Flex>
           </List.Item>
         ))}
       </List.Root>
