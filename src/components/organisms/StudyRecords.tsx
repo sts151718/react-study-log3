@@ -26,6 +26,7 @@ export const StudyRecords: FC<Props> = memo((props) => {
             key={recordText.record_id}
             border="1px solid"
             borderColor="gray.300"
+            borderRadius="md"
             p={4}
           >
             <Flex justifyContent="space-between" alignItems="center">

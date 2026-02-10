@@ -11,7 +11,13 @@ export const AlertButton: FC<Props> = (props) => {
   const { onClick, type = "button", children, buttonProps } = props;
 
   return (
-    <Button colorPalette="red" onClick={onClick} type={type} {...buttonProps}>
+    <Button
+      colorPalette="red"
+      onClick={onClick}
+      type={type}
+      {...buttonProps}
+      focusRing="none"
+    >
       {children}
     </Button>
   );

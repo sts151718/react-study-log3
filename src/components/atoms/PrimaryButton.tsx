@@ -11,7 +11,13 @@ export const PrimaryButton: FC<Props> = (props) => {
   const { onClick, type = "button", children, buttonProps } = props;
 
   return (
-    <Button colorPalette="blue" onClick={onClick} type={type} {...buttonProps}>
+    <Button
+      colorPalette="cyan"
+      onClick={onClick}
+      type={type}
+      {...buttonProps}
+      focusRing="none"
+    >
       {children}
     </Button>
   );

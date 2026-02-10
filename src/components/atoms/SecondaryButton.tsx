@@ -17,6 +17,7 @@ export const SecondaryButton: FC<Props> = (props) => {
       onClick={onClick}
       type={type}
       {...buttonProps}
+      focusRing="none"
     >
       {children}
     </Button>

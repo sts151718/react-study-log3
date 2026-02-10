@@ -22,7 +22,15 @@ function App() {
   };
 
   return (
-    <Container w="96" mx="auto" py="8" textAlign="center">
+    <Container
+      w="96"
+      mx="auto"
+      mt="20"
+      p="8"
+      textAlign="center"
+      bg="white"
+      borderRadius="md"
+    >
       <Heading as="h1" size="2xl" mb="4">
         学習記録一覧
       </Heading>

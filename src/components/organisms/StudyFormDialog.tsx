@@ -57,58 +57,56 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
 
   return (
     <form onSubmit={handleSubmit(onStudySubmit)}>
-      <Fieldset.Root>
-        <Dialog.Root open={isOpen} onOpenChange={dialogOpenChange}>
-          <Dialog.Trigger asChild>
-            <Flex justifyContent="center" align="center" mb={2}>
-              <PrimaryButton>登録</PrimaryButton>
-            </Flex>
-          </Dialog.Trigger>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.CloseTrigger asChild>
-                <CloseButton />
-              </Dialog.CloseTrigger>
-              <Dialog.Header justifyContent="center">
-                <Dialog.Title>新規登録</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <Stack spaceY="4">
-                  <TextField
-                    label="学習内容"
-                    placeholder="学習内容を入力してください"
-                    name={title.name}
-                    onChange={title.onChange}
-                    onBlur={title.onBlur}
-                    inputRef={title.ref}
-                    errorMessage={errors.title?.message}
-                  />
-                  <NumberField
-                    w="full"
-                    label="学習時間"
-                    placeholder="時間で入力してください"
-                    min={0}
-                    name={time.name}
-                    onChange={time.onChange}
-                    onBlur={time.onBlur}
-                    inputRef={time.ref}
-                    errorMessage={errors.time?.message}
-                  />
-                </Stack>
-              </Dialog.Body>
-              <Dialog.Footer justifyContent="center">
-                <ButtonsWrap justifyContent="center" gap="2">
-                  <PrimaryButton type="submit">登録</PrimaryButton>
-                  <Dialog.ActionTrigger asChild>
-                    <SecondaryButton>キャンセル</SecondaryButton>
-                  </Dialog.ActionTrigger>
-                </ButtonsWrap>
-              </Dialog.Footer>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Dialog.Root>
-      </Fieldset.Root>
+      <Dialog.Root open={isOpen} onOpenChange={dialogOpenChange}>
+        <Dialog.Trigger asChild>
+          <Flex justifyContent="center" align="center" mb={2}>
+            <PrimaryButton>登録</PrimaryButton>
+          </Flex>
+        </Dialog.Trigger>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.CloseTrigger focusVisibleRing="none" asChild>
+              <CloseButton />
+            </Dialog.CloseTrigger>
+            <Dialog.Header justifyContent="center">
+              <Dialog.Title>新規登録</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body>
+              <Stack spaceY="4">
+                <TextField
+                  label="学習内容"
+                  placeholder="学習内容を入力してください"
+                  name={title.name}
+                  onChange={title.onChange}
+                  onBlur={title.onBlur}
+                  inputRef={title.ref}
+                  errorMessage={errors.title?.message}
+                />
+                <NumberField
+                  w="full"
+                  label="学習時間"
+                  placeholder="時間で入力してください"
+                  min={0}
+                  name={time.name}
+                  onChange={time.onChange}
+                  onBlur={time.onBlur}
+                  inputRef={time.ref}
+                  errorMessage={errors.time?.message}
+                />
+              </Stack>
+            </Dialog.Body>
+            <Dialog.Footer justifyContent="center">
+              <ButtonsWrap justifyContent="center" gap="2">
+                <PrimaryButton type="submit">登録</PrimaryButton>
+                <Dialog.ActionTrigger asChild>
+                  <SecondaryButton>キャンセル</SecondaryButton>
+                </Dialog.ActionTrigger>
+              </ButtonsWrap>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Dialog.Root>
     </form>
   );
 });
