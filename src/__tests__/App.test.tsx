@@ -9,6 +9,7 @@ import {
 import { Provider } from "@/components/ui/provider";
 import { Record } from "@/domain/record";
 import type { RecordInput } from "@/types/RecordInput";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("@/lib/record.ts", () => ({
   getAllRecords: vi
@@ -33,13 +34,12 @@ vi.mock("@/lib/record.ts", () => ({
         id,
         title: updateData.title ?? "",
         time: Number(updateData.time ?? 0),
-    }),
-  ),
+      }),
+    ),
   deleteRecordById: vi.fn().mockResolvedValue(void 0),
 }));
 
 import App from "../App";
-import userEvent from "@testing-library/user-event";
 
 describe("ローディング画面をみることができる", () => {
   beforeEach(() => {
@@ -114,7 +114,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
@@ -151,7 +151,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const dialogTitle = within(dialog).getByRole("heading", {
       level: 2,
       name: "新規登録",
@@ -171,7 +171,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const timeInput = await within(dialog).findByRole("spinbutton", {
       name: "学習時間",
     });
@@ -198,7 +198,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
@@ -229,7 +229,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
