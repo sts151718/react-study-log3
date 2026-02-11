@@ -1,9 +1,14 @@
 import type { Record } from "@/domain/record";
-import { deleteRecordById, getAllRecords, insertRecord } from "@/lib/record";
+import {
+  deleteRecordById,
+  getAllRecords,
+  insertRecord,
+  updateRecordById,
+} from "@/lib/record";
 import type { RecordInput } from "@/types/RecordInput";
 import { useCallback, useState } from "react";
 
-export const useAllRecords = () => {
+export const useCrudRecords = () => {
   const [records, setRecords] = useState<Array<Record>>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,6 +31,17 @@ export const useAllRecords = () => {
     [records],
   );
 
+  const updateRecord = useCallback(
+    async (id: string, input: RecordInput) => {
+      const newRecord = await updateRecordById(id, input);
+      const updateRecordIndex = records.findIndex((record) => record.id === id);
+      const newRecords = records.toSpliced(updateRecordIndex, 1, newRecord);
+
+      setRecords(newRecords);
+    },
+    [records],
+  );
+
   const deleteRecord = useCallback(
     async (id: string) => {
       await deleteRecordById(id);
@@ -41,6 +57,7 @@ export const useAllRecords = () => {
     isLoading,
     getRecords,
     addRecord,
+    updateRecord,
     deleteRecord,
   };
 };

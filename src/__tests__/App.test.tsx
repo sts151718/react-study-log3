@@ -118,7 +118,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.type(titleInput, newRecordTitle);
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const listContainer = await screen.findByTestId("study-records");
@@ -170,7 +170,7 @@ describe("ローディング画面をみることができる", () => {
     const newRecordTime = "5";
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage = within(dialog).getByText("内容の入力は必須です");
@@ -201,7 +201,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.type(titleInput, newRecordTitle);
     await userEvent.clear(timeInput);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage = within(dialog).getByText("時間の入力は必須です");
@@ -234,7 +234,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.clear(timeInput);
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage =
