@@ -11,6 +11,10 @@ import { Record } from "@/domain/record";
 import type { RecordInput } from "@/types/RecordInput";
 import userEvent from "@testing-library/user-event";
 
+const { recordId } = vi.hoisted(() => ({
+  recordId: { current: 4 },
+}));
+
 vi.mock("@/lib/record.ts", () => ({
   getAllRecords: vi
     .fn()
@@ -22,7 +26,7 @@ vi.mock("@/lib/record.ts", () => ({
     ]),
   insertRecord: vi.fn().mockImplementation(async (record: RecordInput) =>
     Record.fromRow({
-      id: "5",
+      id: String(++recordId.current),
       title: record.title,
       time: Number(record.time),
     }),
