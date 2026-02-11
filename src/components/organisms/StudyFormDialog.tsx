@@ -1,7 +1,6 @@
 import {
   CloseButton,
   Dialog,
-  Fieldset,
   Flex,
   Stack,
   type DialogOpenChangeDetails,
@@ -65,12 +64,12 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
         </Dialog.Trigger>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content data-testid="form-dialog-content">
             <Dialog.CloseTrigger focusVisibleRing="none" asChild>
               <CloseButton />
             </Dialog.CloseTrigger>
             <Dialog.Header justifyContent="center">
-              <Dialog.Title>新規登録</Dialog.Title>
+              <Dialog.Title as="h2">新規登録</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <Stack spaceY="4">

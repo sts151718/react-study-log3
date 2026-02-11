@@ -19,7 +19,7 @@ export const StudyRecords: FC<Props> = memo((props) => {
   }));
 
   return (
-    <Stack spaceY={4} p="2" borderRadius="md">
+    <Stack spaceY={4} p="2" borderRadius="md" data-testid="study-records">
       <List.Root unstyled spaceY={2} textAlign="left">
         {recordTexts.map((recordText) => (
           <List.Item
@@ -43,7 +43,7 @@ export const StudyRecords: FC<Props> = memo((props) => {
           </List.Item>
         ))}
       </List.Root>
-      {isLoading && <Spinner mx="auto" mt={2} />}
+      {isLoading && <Spinner aria-label="ローディング中" mx="auto" mt={2} />}
     </Stack>
   );
 });
