@@ -1,6 +1,6 @@
 import type { Record } from "@/domain/record";
 import { deleteRecordById, getAllRecords, insertRecord } from "@/lib/record";
-import type { StudyForm } from "@/types/StudyForm";
+import type { RecordInput } from "@/types/RecordInput";
 import { useCallback, useState } from "react";
 
 export const useAllRecords = () => {
@@ -9,17 +9,15 @@ export const useAllRecords = () => {
 
   const getRecords = useCallback(async () => {
     const recordsData = await getAllRecords();
+
     setRecords(recordsData);
     setIsLoading(false);
   }, []);
 
   const addRecord = useCallback(
-    async (form: StudyForm) => {
+    async (input: RecordInput) => {
       setIsLoading(true);
-      const newRecord = await insertRecord({
-        title: form.title,
-        time: Number(form.time),
-      } as Omit<Record, "id">);
+      const newRecord = await insertRecord(input);
 
       setRecords([...records, newRecord]);
 

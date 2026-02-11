@@ -1,4 +1,4 @@
-export type StudyForm = {
+export type RecordInput = {
   title: string;
   time: string;
 };

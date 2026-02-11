@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAllRecords } from "./hooks/useAllRecords";
 import { StudyRecords } from "./components/organisms/StudyRecords";
 import { StudyFormDialog } from "./components/organisms/StudyFormDialog";
-import type { StudyForm } from "./types/StudyForm";
+import type { RecordInput } from "./types/RecordInput";
 
 function App() {
   const { records, isLoading, getRecords, addRecord, deleteRecord } =
@@ -13,7 +13,7 @@ function App() {
     getRecords();
   }, []);
 
-  const onStudyDialogSubmit = async (form: StudyForm) => {
+  const onStudyDialogSubmit = async (form: RecordInput) => {
     await addRecord(form);
   };
 

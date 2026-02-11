@@ -12,11 +12,11 @@ import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
 import { NumberField } from "../molecules/NumberField";
 import { ButtonsWrap } from "../atoms/ButtonsWrap";
-import type { StudyForm } from "@/types/StudyForm";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import type { RecordInput } from "@/types/RecordInput";
+import { useForm } from "react-hook-form";
 
 type Props = {
-  onSubmit: (form: StudyForm) => void;
+  onSubmit: (form: RecordInput) => void;
 };
 
 export const StudyFormDialog: FC<Props> = memo((props) => {
@@ -29,7 +29,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<StudyForm>({
+  } = useForm<RecordInput>({
     defaultValues: {
       title: "",
       time: "0",
@@ -47,7 +47,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     min: { value: 0, message: "時間は0以上である必要があります" },
   });
 
-  const onStudySubmit: SubmitHandler<StudyForm> = (data) => {
+  const onStudySubmit = (data: RecordInput) => {
     onSubmit(data);
     setIsOpen(false);
     reset();

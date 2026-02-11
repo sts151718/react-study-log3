@@ -1,4 +1,5 @@
 import { Record } from "@/domain/record";
+import type { RecordInput } from "@/types/RecordInput";
 import type { StudyRecordRow } from "@/types/StudyRecord";
 import { supabase } from "@/utils/supabase";
 
@@ -16,11 +17,13 @@ export const getAllRecords = async (): Promise<Array<Record>> => {
 };
 
 export const insertRecord = async (
-  record: Omit<Record, "id">,
+  insertData: RecordInput,
 ): Promise<Record> => {
-  const response = await await supabase
+  const time = Number(insertData.time);
+
+  const response = await supabase
     .from("study-record")
-    .insert(record)
+    .insert({ ...insertData, time })
     .select();
 
   if (response.error) {
