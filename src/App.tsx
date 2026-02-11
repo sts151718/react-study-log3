@@ -1,4 +1,5 @@
 import { Container, Heading } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/toaster";
 import { useCallback, useEffect } from "react";
 import { useCrudRecords } from "./hooks/useCrudRecords";
 import { StudyRecords } from "./components/organisms/StudyRecords";
@@ -51,33 +52,36 @@ function App() {
   const dialogTitle = isEdit ? "記録編集" : "新規登録";
 
   return (
-    <Container
-      w="96"
-      mx="auto"
-      mt="20"
-      p="8"
-      textAlign="center"
-      bg="white"
-      borderRadius="md"
-    >
-      <Heading as="h1" size="2xl" mb="4">
-        学習記録一覧
-      </Heading>
-      <StudyFormDialog
-        isOpen={isDialogOpen}
-        record={selectedRecord}
-        dialogTitle={dialogTitle}
-        onSubmit={submitStudyDialog}
-        onClickOpenDialog={openAddDialog}
-        onClickCloseDialog={closeDialog}
-      />
-      <StudyRecords
-        isLoading={isLoading}
-        records={records}
-        onDeleteRecord={onDeleteRecord}
-        onOpenDialog={openEditDialog}
-      />
-    </Container>
+    <>
+      <Toaster />
+      <Container
+        w="96"
+        mx="auto"
+        mt="20"
+        p="8"
+        textAlign="center"
+        bg="white"
+        borderRadius="md"
+      >
+        <Heading as="h1" size="2xl" mb="4">
+          学習記録一覧
+        </Heading>
+        <StudyFormDialog
+          isOpen={isDialogOpen}
+          record={selectedRecord}
+          dialogTitle={dialogTitle}
+          onSubmit={submitStudyDialog}
+          onClickOpenDialog={openAddDialog}
+          onClickCloseDialog={closeDialog}
+        />
+        <StudyRecords
+          isLoading={isLoading}
+          records={records}
+          onDeleteRecord={onDeleteRecord}
+          onOpenDialog={openEditDialog}
+        />
+      </Container>
+    </>
   );
 }
 

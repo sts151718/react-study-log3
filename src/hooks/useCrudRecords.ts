@@ -7,49 +7,79 @@ import {
 } from "@/lib/record";
 import type { RecordInput } from "@/types/RecordInput";
 import { useCallback, useState } from "react";
+import { useToaster } from "./useToaster";
 
 export const useCrudRecords = () => {
   const [records, setRecords] = useState<Array<Record>>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { createToaster } = useToaster();
 
   const getRecords = useCallback(async () => {
-    const recordsData = await getAllRecords();
+    try {
+      const recordsData = await getAllRecords();
 
-    setRecords(recordsData);
-    setIsLoading(false);
-  }, []);
+      setRecords(recordsData);
+      setIsLoading(false);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      createToaster({
+        type: "error",
+        description: "学習記録の取得に失敗しました。",
+      });
+    }
+  }, [createToaster]);
 
   const addRecord = useCallback(
     async (input: RecordInput) => {
-      setIsLoading(true);
-      const newRecord = await insertRecord(input);
+      try {
+        const newRecord = await insertRecord(input);
 
-      setRecords([...records, newRecord]);
+        setRecords([...records, newRecord]);
+        createToaster({ type: "success", description: "登録に成功しました。" });
 
-      setIsLoading(false);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        createToaster({ type: "error", description: "登録に失敗しました。" });
+      }
     },
-    [records],
+    [records, createToaster],
   );
 
   const updateRecord = useCallback(
     async (id: string, input: RecordInput) => {
-      const newRecord = await updateRecordById(id, input);
-      const updateRecordIndex = records.findIndex((record) => record.id === id);
-      const newRecords = records.toSpliced(updateRecordIndex, 1, newRecord);
+      try {
+        const newRecord = await updateRecordById(id, input);
+        const updateRecordIndex = records.findIndex(
+          (record) => record.id === id,
+        );
+        const newRecords = records.toSpliced(updateRecordIndex, 1, newRecord);
 
-      setRecords(newRecords);
+        setRecords(newRecords);
+        createToaster({ type: "success", description: "更新に成功しました。" });
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        createToaster({ type: "error", description: "更新に失敗しました。" });
+      }
     },
-    [records],
+    [records, createToaster],
   );
 
   const deleteRecord = useCallback(
     async (id: string) => {
-      await deleteRecordById(id);
+      try {
+        await deleteRecordById(id);
 
-      const newRecords = records.filter((record) => record.id !== id);
-      setRecords(newRecords);
+        const newRecords = records.filter((record) => record.id !== id);
+        setRecords(newRecords);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        createToaster({ type: "error", description: "削除に失敗しました。" });
+      }
     },
-    [records],
+    [records, createToaster],
   );
 
   return {
