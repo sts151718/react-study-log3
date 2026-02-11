@@ -5,7 +5,7 @@ import {
   Stack,
   type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
-import { memo, type FC } from "react";
+import { memo, useEffect, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
@@ -41,10 +41,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     reset,
     setValue,
   } = useForm<RecordInput>({
-    defaultValues: {
-      title: "",
-      time: "0",
-    },
+    reValidateMode: "onSubmit",
   });
 
   const title = register("title", {
@@ -58,8 +55,10 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     min: { value: 0, message: "時間は0以上である必要があります" },
   });
 
-  setValue("title", record?.title ?? "");
-  setValue("time", record?.time.toString() ?? "0");
+  useEffect(() => {
+    setValue("title", record?.title ?? "");
+    setValue("time", record?.time.toString() ?? "0");
+  }, [record]);
 
   const onStudySubmit = (data: RecordInput) => {
     onSubmit(data);

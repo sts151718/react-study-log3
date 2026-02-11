@@ -34,12 +34,15 @@ export const useFormDialog = (props: Props) => {
     setIsDialogOpen(false);
   }, []);
 
-  const openEditDialog = (id: string) => {
-    openDialog(true, id);
-  };
-  const openAddDialog = () => {
+  const openEditDialog = useCallback(
+    (id: string) => {
+      openDialog(true, id);
+    },
+    [openDialog],
+  );
+  const openAddDialog = useCallback(() => {
     openDialog(false);
-  };
+  }, [openDialog]);
 
   return {
     isDialogOpen,
