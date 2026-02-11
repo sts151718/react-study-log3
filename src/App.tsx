@@ -1,10 +1,46 @@
-import "./App.css";
+import { Container, Heading } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useAllRecords } from "./hooks/useAllRecords";
+import { StudyRecords } from "./components/organisms/StudyRecords";
+import { StudyFormDialog } from "./components/organisms/StudyFormDialog";
+import type { RecordInput } from "./types/RecordInput";
 
 function App() {
+  const { records, isLoading, getRecords, addRecord, deleteRecord } =
+    useAllRecords();
+
+  useEffect(() => {
+    getRecords();
+  }, []);
+
+  const onStudyDialogSubmit = async (form: RecordInput) => {
+    await addRecord(form);
+  };
+
+  const onDeleteRecord = async (id: string) => {
+    await deleteRecord(id);
+  };
+
   return (
-    <>
-      <h1>Hello World</h1>
-    </>
+    <Container
+      w="96"
+      mx="auto"
+      mt="20"
+      p="8"
+      textAlign="center"
+      bg="white"
+      borderRadius="md"
+    >
+      <Heading as="h1" size="2xl" mb="4">
+        学習記録一覧
+      </Heading>
+      <StudyFormDialog onSubmit={onStudyDialogSubmit} />
+      <StudyRecords
+        isLoading={isLoading}
+        records={records}
+        onDeleteRecord={onDeleteRecord}
+      />
+    </Container>
   );
 }
 
