@@ -5,7 +5,7 @@ import {
   Stack,
   type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
-import { memo, useEffect, type FC } from "react";
+import { memo, useState, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
@@ -17,7 +17,7 @@ import type { Record } from "@/domain/record";
 
 type Props = {
   isOpen: boolean;
-  record: Record | null;
+  record: RecordInput;
   dialogTitle: string;
   onClickOpenDialog: () => void;
   onClickCloseDialog: () => void;
@@ -39,26 +39,23 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
   } = useForm<RecordInput>({
-    reValidateMode: "onSubmit",
+    defaultValues: {
+      title: record.title,
+      time: record.time,
+    },
   });
 
-  const title = register("title", {
+  const titleRegister = register("title", {
     required: {
       value: true,
       message: "内容の入力は必須です",
     },
   });
-  const time = register("time", {
+  const timeRegister = register("time", {
     required: { value: true, message: "時間の入力は必須です" },
     min: { value: 0, message: "時間は0以上である必要があります" },
   });
-
-  useEffect(() => {
-    setValue("title", record?.title ?? "");
-    setValue("time", record?.time.toString() ?? "0");
-  }, [record]);
 
   const onStudySubmit = (data: RecordInput) => {
     onSubmit(data);
@@ -91,10 +88,10 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
                 <TextField
                   label="学習内容"
                   placeholder="学習内容を入力してください"
-                  name={title.name}
-                  onChange={title.onChange}
-                  onBlur={title.onBlur}
-                  inputRef={title.ref}
+                  name={titleRegister.name}
+                  onChange={titleRegister.onChange}
+                  onBlur={titleRegister.onBlur}
+                  inputRef={titleRegister.ref}
                   errorMessage={errors.title?.message}
                 />
                 <NumberField
@@ -102,10 +99,10 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
                   label="学習時間"
                   placeholder="時間で入力してください"
                   min={0}
-                  name={time.name}
-                  onChange={time.onChange}
-                  onBlur={time.onBlur}
-                  inputRef={time.ref}
+                  name={timeRegister.name}
+                  onChange={timeRegister.onChange}
+                  onBlur={timeRegister.onBlur}
+                  inputRef={timeRegister.ref}
                   errorMessage={errors.time?.message}
                 />
               </Stack>

@@ -6,6 +6,7 @@ import { StudyRecords } from "./components/organisms/StudyRecords";
 import { StudyFormDialog } from "./components/organisms/StudyFormDialog";
 import { useFormDialog } from "./hooks/useFormDialog";
 import type { RecordInput } from "./types/RecordInput";
+import hash from "stable-hash";
 
 function App() {
   const {
@@ -67,8 +68,12 @@ function App() {
           学習記録一覧
         </Heading>
         <StudyFormDialog
+          key={hash(selectedRecord)}
           isOpen={isDialogOpen}
-          record={selectedRecord}
+          record={{
+            title: selectedRecord?.title ?? "",
+            time: selectedRecord?.time.toString() ?? "0",
+          }}
           dialogTitle={dialogTitle}
           onSubmit={submitStudyDialog}
           onClickOpenDialog={openAddDialog}
