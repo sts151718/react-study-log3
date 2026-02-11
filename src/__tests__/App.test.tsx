@@ -9,6 +9,11 @@ import {
 import { Provider } from "@/components/ui/provider";
 import { Record } from "@/domain/record";
 import type { RecordInput } from "@/types/RecordInput";
+import userEvent from "@testing-library/user-event";
+
+const { recordId } = vi.hoisted(() => ({
+  recordId: { current: 4 },
+}));
 
 vi.mock("@/lib/record.ts", () => ({
   getAllRecords: vi
@@ -21,16 +26,24 @@ vi.mock("@/lib/record.ts", () => ({
     ]),
   insertRecord: vi.fn().mockImplementation(async (record: RecordInput) =>
     Record.fromRow({
-      id: "5",
+      id: String(++recordId.current),
       title: record.title,
       time: Number(record.time),
     }),
   ),
+  updateRecordById: vi
+    .fn()
+    .mockImplementation(async (id, updateData: Partial<RecordInput>) =>
+      Record.fromRow({
+        id,
+        title: updateData.title ?? "",
+        time: Number(updateData.time ?? 0),
+      }),
+    ),
   deleteRecordById: vi.fn().mockResolvedValue(void 0),
 }));
 
 import App from "../App";
-import userEvent from "@testing-library/user-event";
 
 describe("ローディング画面をみることができる", () => {
   beforeEach(() => {
@@ -105,7 +118,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
@@ -118,7 +131,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.type(titleInput, newRecordTitle);
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const listContainer = await screen.findByTestId("study-records");
@@ -142,7 +155,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const dialogTitle = within(dialog).getByRole("heading", {
       level: 2,
       name: "新規登録",
@@ -162,7 +175,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const timeInput = await within(dialog).findByRole("spinbutton", {
       name: "学習時間",
     });
@@ -170,7 +183,7 @@ describe("ローディング画面をみることができる", () => {
     const newRecordTime = "5";
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage = within(dialog).getByText("内容の入力は必須です");
@@ -189,7 +202,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
@@ -201,7 +214,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.type(titleInput, newRecordTitle);
     await userEvent.clear(timeInput);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage = within(dialog).getByText("時間の入力は必須です");
@@ -220,7 +233,7 @@ describe("ローディング画面をみることができる", () => {
 
     await userEvent.click(openDialogButton);
 
-    const dialog = await screen.findByTestId("form-dialog-content");
+    const dialog = await screen.getByTestId("form-dialog-content");
     const titleInput = await within(dialog).findByRole("textbox", {
       name: "学習内容",
     });
@@ -234,7 +247,7 @@ describe("ローディング画面をみることができる", () => {
     await userEvent.clear(timeInput);
     await userEvent.type(timeInput, newRecordTime);
 
-    const submitButton = within(dialog).getByRole("button", { name: "登録" });
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
     await userEvent.click(submitButton);
 
     const errorMessage =
@@ -259,5 +272,69 @@ describe("ローディング画面をみることができる", () => {
       within(removingListItem).getByRole("button", { name: "削除" }),
     );
     await waitForElementToBeRemoved(removingListItem);
+  });
+
+  it("編集ボタンをクリックしたときのタイトルが「記録編集」であること", async () => {
+    render(
+      <Provider>
+        <App />
+      </Provider>,
+    );
+
+    const ListContainer = screen.getByTestId("study-records");
+    const list = await within(ListContainer).findByRole("list");
+    const listitem = await within(list).findAllByRole("listitem");
+    const editingListItem = listitem[1];
+
+    await userEvent.click(
+      within(editingListItem).getByRole("button", { name: "編集" }),
+    );
+
+    const dialog = screen.getByTestId("form-dialog-content");
+    const dialogTitle = within(dialog).getByRole("heading", {
+      level: 2,
+      name: "記録編集",
+    });
+
+    expect(dialogTitle).toBeVisible();
+  });
+
+  it("入力した内容の通りに更新ができていること", async () => {
+    render(
+      <Provider>
+        <App />
+      </Provider>,
+    );
+
+    const ListContainer = screen.getByTestId("study-records");
+    const list = await within(ListContainer).findByRole("list");
+    const listitem = await within(list).findAllByRole("listitem");
+    const editingListItem = listitem[2];
+
+    await userEvent.click(
+      within(editingListItem).getByRole("button", { name: "編集" }),
+    );
+
+    const dialog = screen.getByTestId("form-dialog-content");
+    const titleInput = await within(dialog).findByRole("textbox", {
+      name: "学習内容",
+    });
+    const timeInput = await within(dialog).findByRole("spinbutton", {
+      name: "学習時間",
+    });
+
+    const editingRecordTitle = "更新学習内容";
+    const editingRecordTime = "100";
+    await userEvent.clear(titleInput);
+    await userEvent.type(titleInput, editingRecordTitle);
+    await userEvent.clear(timeInput);
+    await userEvent.type(timeInput, editingRecordTime);
+
+    const submitButton = within(dialog).getByRole("button", { name: "保存" });
+    await userEvent.click(submitButton);
+
+    const editingListItemText = within(editingListItem).getByRole("paragraph");
+    expect(editingListItemText).toHaveTextContent(editingRecordTitle);
+    expect(editingListItemText).toHaveTextContent(editingRecordTime);
   });
 });

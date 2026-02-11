@@ -5,7 +5,7 @@ import {
   Stack,
   type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
-import { memo, useState, type FC } from "react";
+import { memo, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
@@ -13,21 +13,33 @@ import { NumberField } from "../molecules/NumberField";
 import { ButtonsWrap } from "../atoms/ButtonsWrap";
 import type { RecordInput } from "@/types/RecordInput";
 import { useForm } from "react-hook-form";
+import type { Record } from "@/domain/record";
 
 type Props = {
+  isOpen: boolean;
+  record: Record | null;
+  dialogTitle: string;
+  onClickOpenDialog: () => void;
+  onClickCloseDialog: () => void;
   onSubmit: (form: RecordInput) => void;
 };
 
 export const StudyFormDialog: FC<Props> = memo((props) => {
-  const { onSubmit } = props;
-
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    isOpen,
+    record,
+    dialogTitle,
+    onClickOpenDialog,
+    onClickCloseDialog,
+    onSubmit,
+  } = props;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<RecordInput>({
     defaultValues: {
       title: "",
@@ -46,13 +58,17 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
     min: { value: 0, message: "時間は0以上である必要があります" },
   });
 
+  setValue("title", record?.title ?? "");
+  setValue("time", record?.time.toString() ?? "0");
+
   const onStudySubmit = (data: RecordInput) => {
     onSubmit(data);
-    setIsOpen(false);
+    onClickCloseDialog();
     reset();
   };
 
-  const dialogOpenChange = (e: DialogOpenChangeDetails) => setIsOpen(e.open);
+  const dialogOpenChange = (e: DialogOpenChangeDetails) =>
+    e.open ? onClickOpenDialog() : onClickCloseDialog();
 
   return (
     <form onSubmit={handleSubmit(onStudySubmit)}>
@@ -69,7 +85,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
               <CloseButton />
             </Dialog.CloseTrigger>
             <Dialog.Header justifyContent="center">
-              <Dialog.Title as="h2">新規登録</Dialog.Title>
+              <Dialog.Title as="h2">{dialogTitle}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <Stack spaceY="4">
@@ -97,7 +113,7 @@ export const StudyFormDialog: FC<Props> = memo((props) => {
             </Dialog.Body>
             <Dialog.Footer justifyContent="center">
               <ButtonsWrap justifyContent="center" gap="2">
-                <PrimaryButton type="submit">登録</PrimaryButton>
+                <PrimaryButton type="submit">保存</PrimaryButton>
                 <Dialog.ActionTrigger asChild>
                   <SecondaryButton>キャンセル</SecondaryButton>
                 </Dialog.ActionTrigger>

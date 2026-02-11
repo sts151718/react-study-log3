@@ -34,6 +34,26 @@ export const insertRecord = async (
   return Record.fromRow(insertedRow);
 };
 
+export const updateRecordById = async (
+  id: string,
+  updateData: Partial<RecordInput>,
+): Promise<Record> => {
+  const time = Number(updateData.time);
+
+  const response = await supabase
+    .from("study-record")
+    .update({ ...updateData, time })
+    .eq("id", id)
+    .select();
+
+  if (response.error) {
+    throw new Error(response.error.message);
+  }
+
+  const updatedRow: StudyRecordRow = response.data[0];
+  return Record.fromRow(updatedRow);
+};
+
 export const deleteRecordById = async (id: string): Promise<void> => {
   const response = await supabase.from("study-record").delete().eq("id", id);
 
