@@ -5,7 +5,7 @@ import {
   Stack,
   type DialogOpenChangeDetails,
 } from "@chakra-ui/react";
-import { memo, useState, type FC } from "react";
+import { memo, type FC } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { SecondaryButton } from "../atoms/SecondaryButton";
 import { TextField } from "../molecules/TextField";
@@ -13,7 +13,6 @@ import { NumberField } from "../molecules/NumberField";
 import { ButtonsWrap } from "../atoms/ButtonsWrap";
 import type { RecordInput } from "@/types/RecordInput";
 import { useForm } from "react-hook-form";
-import type { Record } from "@/domain/record";
 
 type Props = {
   isOpen: boolean;
